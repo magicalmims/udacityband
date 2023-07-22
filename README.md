@@ -1,5 +1,5 @@
 # udacityband
-Udacity BAND Nanodegree
+Udacity BAND Nanodegree (Busienss Analytics NanoDegree)
 
 This a body of work from a Udacity Nanodegree encompassing SQL, Tableau and more!
 
