@@ -1,0 +1,107 @@
+SQL Queries for Nanodegree Submission:
+
+Query 1:  Finding the most popular music Genre for each country
+
+with total as (
+select
+country,
+g.name as name,
+g.genreid as id,
+sum(quantity) as purchases
+from invoice i 
+join invoiceline  il
+on il.invoiceid = i.invoiceid
+join track t 
+on t.trackid = il.trackid
+join genre g
+on g.genreid = t.genreid
+join customer c
+on c.customerid = i.customerid
+group by 1,2,3
+)
+
+select 
+country,
+name,
+id,
+purchases
+from total a
+where purchases = (select MAX(purchases)from total
+                  where total.country = a.country)
+order by country
+
+
+
+
+
+
+Query 2:  Who is writing rock music?
+
+
+select
+a.artistid,
+a.name,
+count(trackid)songs
+from artist a
+join album al
+on a.artistid = al.artistid
+join track t
+on t.albumid = al.albumid
+join genre g
+on g.genreid = t.genreid
+where g.name = 'Rock'
+group by 1,2
+order by songs desc
+limit 10
+
+
+
+
+Query 3:  Total Spent by Country
+
+
+with totals as (
+select
+country,
+firstname,
+lastname,
+c.customerid,
+sum(total) total_spent
+from customer c
+join invoice i
+on c.customerid = i.customerid
+group by 1,2,3,4
+)
+
+select
+country,
+firstname,
+lastname,
+customerid,
+total_spent
+from totals t
+where total_spent = 
+(select MAX(total_spent)from totals
+ where totals.country=t.country)
+
+
+
+
+
+
+Query 4: Top 10 artists
+
+
+select
+a.name,
+sum(quantity*il.unitprice) total
+from artist a
+join album al
+on a.artistid = al.artistid
+join track t
+on t.albumid = al.albumid
+join invoiceline il
+on il.trackid = t.trackid
+group by 1
+order by 2 desc
+limit 10
